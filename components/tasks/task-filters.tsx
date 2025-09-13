@@ -13,142 +13,127 @@ interface TaskFiltersProps {
   };
 }
 
+const createFilterToggle = (key: keyof TaskFilter) => 
+  (currentFilter: TaskFilter, onFilterChange: (filter: TaskFilter) => void) => 
+  (value: string) => {
+    const currentValues = (currentFilter[key] as string[]) || [];
+    const newValues = currentValues.includes(value)
+      ? currentValues.filter((v: string) => v !== value)
+      : [...currentValues, value];
+    
+    onFilterChange({
+      ...currentFilter,
+      [key]: newValues.length > 0 ? newValues : undefined
+    });
+  };
+
+const toggleStatus = createFilterToggle('status');
+const togglePriority = createFilterToggle('priority');
+
+const hasActiveFilters = (filter: TaskFilter) => 
+  Object.keys(filter).some(key => filter[key as keyof TaskFilter] !== undefined);
+
+const renderFilterButton = (
+  key: string,
+  label: string,
+  count: number,
+  isActive: boolean,
+  onClick: () => void
+) => (
+  <Button
+    key={key}
+    variant={isActive ? "default" : "outline"}
+    size="sm"
+    onClick={onClick}
+    className="text-xs"
+  >
+    {label} ({count})
+  </Button>
+);
+
+const renderActiveFilter = (
+  key: string,
+  label: string,
+  onRemove: () => void
+) => (
+  <Badge key={key} variant="secondary" className="text-xs">
+    {label}
+    <button
+      onClick={onRemove}
+      className="ml-1 hover:text-gray-700"
+    >
+      <X className="w-3 h-3" />
+    </button>
+  </Badge>
+);
+
 export function TaskFilters({ currentFilter, onFilterChange, taskCounts }: TaskFiltersProps) {
+  const statusEntries = Object.entries(taskCounts.byStatus) as [TaskStatus, number][];
+  const priorityEntries = Object.entries(taskCounts.byPriority) as [TaskPriority, number][];
   
-  const toggleStatus = (status: TaskStatus) => {
-    const currentStatuses = currentFilter.status || [];
-    const newStatuses = currentStatuses.includes(status)
-      ? currentStatuses.filter(s => s !== status)
-      : [...currentStatuses, status];
-    
-    onFilterChange({
-      ...currentFilter,
-      status: newStatuses.length > 0 ? newStatuses : undefined
-    });
-  };
-
-  const togglePriority = (priority: TaskPriority) => {
-    const currentPriorities = currentFilter.priority || [];
-    const newPriorities = currentPriorities.includes(priority)
-      ? currentPriorities.filter(p => p !== priority)
-      : [...currentPriorities, priority];
-    
-    onFilterChange({
-      ...currentFilter,
-      priority: newPriorities.length > 0 ? newPriorities : undefined
-    });
-  };
-
-  const clearFilters = () => {
-    onFilterChange({});
-  };
-
-  const hasActiveFilters = Object.keys(currentFilter).some(key => 
-    currentFilter[key as keyof TaskFilter] !== undefined
-  );
+  const clearFilters = () => onFilterChange({});
+  const hasFilters = hasActiveFilters(currentFilter);
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-lg border border-gray-200/50 p-6 shadow-sm">
-      <div className="space-y-6">
+    <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="space-y-4">
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            Filter by Status
-          </h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Status</h3>
           <div className="flex flex-wrap gap-2">
-            {(Object.keys(taskCounts.byStatus) as TaskStatus[]).map(status => {
+            {statusEntries.map(([status, count]) => {
               const isActive = currentFilter.status?.includes(status) || false;
-              const count = taskCounts.byStatus[status];
-              
-              return (
-                <Button
-                  key={status}
-                  variant={isActive ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => toggleStatus(status)}
-                  className={`text-xs font-medium transition-all duration-200 ${
-                    isActive 
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md' 
-                      : 'hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700'
-                  }`}
-                >
-                  {status.replace('_', ' ')} 
-                  <Badge variant="secondary" className="ml-2 text-xs">
-                    {count}
-                  </Badge>
-                </Button>
+              return renderFilterButton(
+                status,
+                status.replace('_', ' '),
+                count,
+                isActive,
+                () => toggleStatus(currentFilter, onFilterChange)(status)
               );
             })}
           </div>
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-            Filter by Priority
-          </h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Priority</h3>
           <div className="flex flex-wrap gap-2">
-            {(Object.keys(taskCounts.byPriority) as TaskPriority[]).map(priority => {
+            {priorityEntries.map(([priority, count]) => {
               const isActive = currentFilter.priority?.includes(priority) || false;
-              const count = taskCounts.byPriority[priority];
-              
-              return (
-                <Button
-                  key={priority}
-                  variant={isActive ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => togglePriority(priority)}
-                  className={`text-xs font-medium transition-all duration-200 ${
-                    isActive 
-                      ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-md' 
-                      : 'hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700'
-                  }`}
-                >
-                  {priority}
-                  <Badge variant="secondary" className="ml-2 text-xs">
-                    {count}
-                  </Badge>
-                </Button>
+              return renderFilterButton(
+                priority,
+                priority,
+                count,
+                isActive,
+                () => togglePriority(currentFilter, onFilterChange)(priority)
               );
             })}
           </div>
         </div>
 
-        {hasActiveFilters && (
-          <div className="flex items-center gap-3 pt-4 border-t border-gray-200">
-            <span className="text-sm font-medium text-gray-700">Active filters:</span>
+        {hasFilters && (
+          <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+            <span className="text-xs text-gray-500">Active filters:</span>
             
-            <div className="flex flex-wrap gap-2">
-              {currentFilter.status?.map(status => (
-                <Badge key={status} variant="secondary" className="text-xs bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
-                  {status.replace('_', ' ')}
-                  <button
-                    onClick={() => toggleStatus(status)}
-                    className="ml-1 hover:text-blue-600 transition-colors"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </Badge>
-              ))}
-              
-              {currentFilter.priority?.map(priority => (
-                <Badge key={priority} variant="secondary" className="text-xs bg-purple-100 text-purple-800 hover:bg-purple-200 transition-colors">
-                  {priority}
-                  <button
-                    onClick={() => togglePriority(priority)}
-                    className="ml-1 hover:text-purple-600 transition-colors"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </Badge>
-              ))}
-            </div>
+            {currentFilter.status?.map(status => 
+              renderActiveFilter(
+                status,
+                status.replace('_', ' '),
+                () => toggleStatus(currentFilter, onFilterChange)(status)
+              )
+            )}
+            
+            {currentFilter.priority?.map(priority => 
+              renderActiveFilter(
+                priority,
+                priority,
+                () => togglePriority(currentFilter, onFilterChange)(priority)
+              )
+            )}
             
             <Button
               variant="ghost"
               size="sm"
               onClick={clearFilters}
-              className="text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+              className="text-xs text-gray-500 hover:text-gray-700"
             >
               Clear all
             </Button>

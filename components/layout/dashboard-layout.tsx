@@ -1,63 +1,60 @@
 import { Card } from '@/components/ui/card';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { StatCardProps } from '@/lib/types';
+import { getColorConfig } from '@/lib/common/constants';
 
 export function DashboardLayout({ sidebar, header, main, stats }: any) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
         {header}
       </header>
       
-      <div className="flex">
-        <aside className="w-72 bg-white/90 backdrop-blur-sm border-r border-gray-200/50 min-h-screen shadow-sm">
-          {sidebar}
-        </aside>
+      <ResizablePanelGroup direction="horizontal" className="h-[calc(100vh-4rem)]">
+        <ResizablePanel defaultSize={20} minSize={15} maxSize={35} className="min-w-[240px]">
+          <aside className="h-full bg-white border-r border-gray-200">
+            {sidebar}
+          </aside>
+        </ResizablePanel>
         
-        <main className="flex-1 p-8">
-          {stats && (
-            <div className="mb-8">
-              {stats}
-            </div>
-          )}
-          <div className="space-y-6">
-            {main}
+        <ResizableHandle withHandle className="w-1 bg-gray-200 hover:bg-blue-300 transition-colors group">
+          <div className="w-3 h-8 bg-white border border-gray-300 rounded-sm shadow-sm group-hover:border-blue-400 group-hover:shadow-md transition-all flex items-center justify-center">
+            <div className="w-1 h-4 bg-gray-400 group-hover:bg-blue-500 transition-colors rounded-sm"></div>
           </div>
-        </main>
-      </div>
+        </ResizableHandle>
+        
+        <ResizablePanel defaultSize={80} minSize={65}>
+          <main className="h-full p-6 overflow-auto">
+            {stats && (
+              <div className="mb-6">
+                {stats}
+              </div>
+            )}
+            <div className="space-y-4">
+              {main}
+            </div>
+          </main>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </div>
   );
 }
 
-
 export function StatCard({ title, value, subtitle, color = 'blue' }: StatCardProps) {
-  const colorClasses = {
-    blue: 'border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-900',
-    green: 'border-green-200 bg-gradient-to-br from-green-50 to-green-100 text-green-900',
-    yellow: 'border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100 text-yellow-900',
-    red: 'border-red-200 bg-gradient-to-br from-red-50 to-red-100 text-red-900',
-    gray: 'border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900',
-  };
-
-  const iconClasses = {
-    blue: 'text-blue-600',
-    green: 'text-green-600',
-    yellow: 'text-yellow-600',
-    red: 'text-red-600',
-    gray: 'text-gray-600',
-  };
+  const config = getColorConfig(color);
 
   return (
-    <Card className={`p-6 ${colorClasses[color]} border-2 hover:shadow-lg transition-all duration-200 group`}>
+    <Card className={`p-6 ${config.bg} ${config.border} border-2 hover:shadow-lg transition-all duration-200 group`}>
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-3xl font-bold mb-1">{value}</div>
-          <div className="text-sm font-semibold opacity-90">{title}</div>
+          <div className={`text-3xl font-bold ${config.text} mb-1`}>{value}</div>
+          <div className={`text-sm font-semibold ${config.text} opacity-90`}>{title}</div>
           {subtitle && (
-            <div className="text-xs opacity-75 mt-1">{subtitle}</div>
+            <div className={`text-xs ${config.text} opacity-75 mt-1`}>{subtitle}</div>
           )}
         </div>
-        <div className={`w-12 h-12 rounded-full bg-white/50 flex items-center justify-center group-hover:scale-110 transition-transform ${iconClasses[color]}`}>
-          <div className="w-6 h-6 bg-current rounded-full opacity-20"></div>
+        <div className={`w-12 h-12 ${config.icon} rounded-full flex items-center justify-center group-hover:scale-110 transition-transform`}>
+          <div className={`w-6 h-6 ${config.accent} rounded-full opacity-60`}></div>
         </div>
       </div>
     </Card>

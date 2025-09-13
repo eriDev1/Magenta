@@ -4,7 +4,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { TaskCard } from "@/components/task-card";
 import { TaskFilters } from "@/components/tasks/task-filters";
-import { Task, TaskFilter, TaskSummary } from "@/lib/types";
+import { Task, TaskFilter, TaskSummary, TaskStatus, TaskPriority } from "@/lib/types";
 
 export default function Home() {
   const sampleTasks: Task[] = [
@@ -74,27 +74,27 @@ export default function Home() {
   ];
 
   const calculateTaskSummary = (tasks: Task[]): TaskSummary => {
-    return tasks.reduce((summary, task) => {
-      return {
-        total: summary.total + 1,
-        byStatus: {
-          ...summary.byStatus,
-          [task.status]: (summary.byStatus[task.status] || 0) + 1
-        },
-        byPriority: {
-          ...summary.byPriority,
-          [task.priority]: (summary.byPriority[task.priority] || 0) + 1
-        },
-        overdue: task.dueDate && task.dueDate < new Date() && task.status !== 'completed' 
-          ? summary.overdue + 1 
-          : summary.overdue
-      };
-    }, {
+    const initialSummary: TaskSummary = {
       total: 0,
-      byStatus: {} as Record<string, number>,
-      byPriority: {} as Record<string, number>,
+      byStatus: {} as Record<TaskStatus, number>,
+      byPriority: {} as Record<TaskPriority, number>,
       overdue: 0
-    } as TaskSummary);
+    };
+
+    return tasks.reduce((summary, task) => ({
+      total: summary.total + 1,
+      byStatus: {
+        ...summary.byStatus,
+        [task.status]: (summary.byStatus[task.status] || 0) + 1
+      },
+      byPriority: {
+        ...summary.byPriority,
+        [task.priority]: (summary.byPriority[task.priority] || 0) + 1
+      },
+      overdue: task.dueDate && task.dueDate < new Date() && task.status !== 'completed' 
+        ? summary.overdue + 1 
+        : summary.overdue
+    }), initialSummary);
   };
 
   const taskSummary = calculateTaskSummary(sampleTasks);
@@ -147,27 +147,16 @@ export default function Home() {
             }}
           />
           
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200/50 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-white">
+          <div className="bg-white rounded-lg border border-gray-200">
+            <div className="p-4 border-b border-gray-200">
               <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">Recent Tasks</h2>
-                  <p className="text-sm text-gray-600 mt-1">Manage and track your project tasks</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-gray-900">{sampleTasks.length}</div>
-                    <div className="text-xs text-gray-500">Total Tasks</div>
-                  </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">T</span>
-                  </div>
-                </div>
+                <h2 className="text-lg font-semibold text-gray-900">Recent Tasks</h2>
+                <span className="text-sm text-gray-500">{sampleTasks.length} tasks</span>
               </div>
             </div>
             
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {sampleTasks.map((task) => (
                   <TaskCard key={task.id} task={task} />
                 ))}
