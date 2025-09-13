@@ -1,15 +1,21 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Search, Bell, User, Plus, Settings, LogOut } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { ThemeSwitcher } from '@/components/theme-switcher';
-import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+import Link from "next/link";
+import { Search, Bell, User, Plus, Settings, LogOut } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface HeaderProps {
   user?: {
@@ -24,20 +30,23 @@ export function Header({ user }: HeaderProps) {
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push('/auth/login');
+    router.push("/auth/login");
   };
 
   return (
     <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
       <div className="flex items-center space-x-4">
-        <Link href="/" className="flex items-center space-x-3 group">
-          <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm">
-            <span className="text-white font-bold text-sm">M</span>
+        <Link href="/" className="flex items-center space-x-3 group h-10">
+          <div className="h-32 w-40 relative">
+            {" "}
+            <Image
+              src="/logo.png"
+              alt="Mageta Logo"
+              fill
+              className="object-contain"
+            />
           </div>
-          <div>
-            <span className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">Mageta</span>
-            <div className="text-xs text-gray-500 -mt-1">Task Management</div>
-          </div>
+    
         </Link>
       </div>
 
@@ -57,22 +66,32 @@ export function Header({ user }: HeaderProps) {
           <Bell className="w-4 h-4 group-hover:text-blue-600 transition-colors" />
           <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
         </Button>
-        
-        <Button variant="outline" size="sm" className="hidden sm:flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors">
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="hidden sm:flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors"
+        >
           <Plus className="w-4 h-4" />
           New Task
         </Button>
-        
+
         <ThemeSwitcher />
-        
+
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-9 w-9 rounded-full hover:bg-gray-100">
+              <Button
+                variant="ghost"
+                className="relative h-9 w-9 rounded-full hover:bg-gray-100"
+              >
                 <Avatar className="h-9 w-9">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="bg-gradient-to-br from-blue-600 to-purple-600 text-white text-sm font-semibold">
-                    {user.name.split(' ').map(n => n[0]).join('')}
+                    {user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -82,7 +101,10 @@ export function Header({ user }: HeaderProps) {
                 <Avatar className="h-10 w-10">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="bg-gradient-to-br from-blue-600 to-purple-600 text-white">
-                    {user.name.split(' ').map(n => n[0]).join('')}
+                    {user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col space-y-1 leading-none">
