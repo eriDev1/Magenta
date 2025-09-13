@@ -11,19 +11,23 @@ export function DashboardLayout({ sidebar, header, main, stats }: any) {
       </header>
       
       <ResizablePanelGroup direction="horizontal" className="h-[calc(100vh-4rem)]">
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={35} className="min-w-[240px]">
-          <aside className="h-full bg-white border-r border-gray-200">
+        <ResizablePanel defaultSize={25} minSize={8} maxSize={40} className="min-w-[180px]">
+          <aside className="h-[calc(100vh-4rem)] bg-white border-r overflow-y-auto">
             {sidebar}
           </aside>
         </ResizablePanel>
         
-        <ResizableHandle withHandle className="w-1 bg-gray-200 hover:bg-blue-300 transition-colors group">
-          <div className="w-3 h-8 bg-white border border-gray-300 rounded-sm shadow-sm group-hover:border-blue-400 group-hover:shadow-md transition-all flex items-center justify-center">
-            <div className="w-1 h-4 bg-gray-400 group-hover:bg-blue-500 transition-colors rounded-sm"></div>
+        <ResizableHandle withHandle className="w-2 bg-gray-200 hover:bg-gray-300 transition-colors group">
+          <div className="w-4 h-12 bg-white border border-gray-300 rounded-md shadow-sm group-hover:border-gray-400 group-hover:shadow-md transition-all flex items-center justify-center">
+            <div className="flex flex-col space-y-1">
+              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            </div>
           </div>
         </ResizableHandle>
         
-        <ResizablePanel defaultSize={80} minSize={65}>
+        <ResizablePanel defaultSize={75} minSize={60}>
           <main className="h-full p-6 overflow-auto">
             {stats && (
               <div className="mb-6">
