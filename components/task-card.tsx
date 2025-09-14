@@ -2,6 +2,7 @@ import { Task, O, pipe } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar, User } from 'lucide-react';
+import { TaskActions } from '@/components/task-actions';
 import { getPriorityColor, getStatusColor } from '@/lib/common/constants';
 
 export function TaskCard({ task }: { task: Task }) {
@@ -15,14 +16,15 @@ export function TaskCard({ task }: { task: Task }) {
     <Card className="hover:shadow-lg transition-all duration-200 border border-gray-200 group">
       <CardContent className="p-5">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{task.title}</h3>
-          <div className="flex gap-2">
+          <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors flex-1 pr-2">{task.title}</h3>
+          <div className="flex items-center gap-2">
             <Badge variant="outline" className={getPriorityColor(task.priority)}>
               {task.priority}
             </Badge>
             <Badge variant="secondary" className={getStatusColor(task.status)}>
               {task.status.replace('_', ' ')}
             </Badge>
+            <TaskActions task={task} />
           </div>
         </div>
         

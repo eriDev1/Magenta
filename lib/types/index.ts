@@ -13,6 +13,100 @@ export const taskId = (id: string): TaskId => id as TaskId
 export const userId = (id: string): UserId => id as UserId
 export const projectId = (id: string): ProjectId => id as ProjectId
 
+export interface Database {
+  public: {
+    tasks: {
+      Row: {
+        id: string
+        title: string
+        description: string
+        status: TaskStatus
+        priority: TaskPriority
+        project_id: string
+        assignee_id: string | null
+        creator_id: string
+        due_date: string | null
+        created_at: string
+        updated_at: string
+      }
+      Insert: {
+        id?: string
+        title: string
+        description?: string
+        status?: TaskStatus
+        priority?: TaskPriority
+        project_id: string
+        assignee_id?: string | null
+        creator_id: string
+        due_date?: string | null
+      }
+      Update: {
+        id?: string
+        title?: string
+        description?: string
+        status?: TaskStatus
+        priority?: TaskPriority
+        assignee_id?: string | null
+        due_date?: string | null
+      }
+    }
+    projects: {
+      Row: {
+        id: string
+        name: string
+        description: string
+        status: ProjectStatus
+        owner_id: string
+        created_at: string
+        updated_at: string
+      }
+      Insert: {
+        id?: string
+        name: string
+        description?: string
+        status?: ProjectStatus
+        owner_id: string
+      }
+      Update: {
+        id?: string
+        name?: string
+        description?: string
+        status?: ProjectStatus
+      }
+    }
+    project_members: {
+      Row: {
+        id: string
+        project_id: string
+        user_id: string
+        role: 'admin' | 'member' | 'viewer'
+        joined_at: string
+      }
+      Insert: {
+        project_id: string
+        user_id: string
+        role?: 'admin' | 'member' | 'viewer'
+      }
+      Update: {
+        role?: 'admin' | 'member' | 'viewer'
+      }
+    }
+    task_tags: {
+      Row: {
+        id: string
+        task_id: string
+        tag: string
+        created_at: string
+      }
+      Insert: {
+        task_id: string
+        tag: string
+      }
+      Update: never
+    }
+  }
+}
+
 export type TaskStatus = 'todo' | 'in_progress' | 'completed' | 'cancelled'
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
 export type ProjectStatus = 'planning' | 'active' | 'on_hold' | 'completed'
