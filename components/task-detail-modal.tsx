@@ -11,8 +11,6 @@ import {
   Calendar, 
   User, 
   Clock, 
-  MessageSquare, 
-  Paperclip, 
   MoreHorizontal,
   Edit3,
   Trash2,
@@ -44,22 +42,6 @@ interface TaskDetailModalProps {
   onUpdate?: (taskId: string, updates: Partial<Task>) => void;
 }
 
-const mockComments = [
-  {
-    id: '1',
-    author: 'John Doe',
-    avatar: null,
-    content: 'I\'ve started working on this task. The initial research is complete.',
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-  },
-  {
-    id: '2',
-    author: 'Alice Smith',
-    avatar: null,
-    content: 'Great progress! I\'ve reviewed the requirements and they look good. Let me know if you need any help with the implementation.',
-    createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000),
-  },
-];
 
 const mockActivity = [
   {
@@ -82,7 +64,6 @@ export function TaskDetailModal({ task, isOpen, onClose, onUpdate }: TaskDetailM
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
   const [editedDescription, setEditedDescription] = useState('');
-  const [newComment, setNewComment] = useState('');
 
   if (!task) return null;
 
@@ -131,33 +112,33 @@ export function TaskDetailModal({ task, isOpen, onClose, onUpdate }: TaskDetailM
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0">
+      <DialogContent className="!w-[80vw] !max-w-none max-h-[95vh] overflow-hidden p-0">
         <div className="flex h-full">
           {/* Main Content */}
           <div className="flex-1 overflow-y-auto">
-            <DialogHeader className="p-6 pb-4 border-b border-gray-200">
+            <DialogHeader className="p-8 pb-6 border-b border-gray-200">
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0 pr-4">
                   {isEditing ? (
                     <Input
                       value={editedTitle}
                       onChange={(e) => setEditedTitle(e.target.value)}
-                      className="text-lg font-semibold border-none p-0 focus:ring-0 focus:border-none"
+                      className="text-2xl font-bold border-none p-0 focus:ring-0 focus:border-none"
                     />
                   ) : (
-                    <DialogTitle className="text-lg font-semibold text-gray-900 leading-7">
+                    <DialogTitle className="text-2xl font-bold text-gray-900 leading-8">
                       {task.title}
                     </DialogTitle>
                   )}
-                  <div className="flex items-center gap-2 mt-2">
-                    <Badge variant="outline" className={cn("text-xs", getPriorityColor(task.priority))}>
+                  <div className="flex items-center gap-3 mt-4">
+                    <Badge variant="outline" className={cn("text-sm px-3 py-1", getPriorityColor(task.priority))}>
                       {task.priority.toUpperCase()}
                     </Badge>
-                    <Badge variant="secondary" className={getStatusColor(task.status)}>
+                    <Badge variant="secondary" className={cn("text-sm px-3 py-1", getStatusColor(task.status))}>
                       {task.status.replace('_', ' ').toUpperCase()}
                     </Badge>
                     {isOverdue && (
-                      <Badge variant="destructive" className="text-xs">
+                      <Badge variant="destructive" className="text-sm px-3 py-1">
                         OVERDUE
                       </Badge>
                     )}
@@ -193,9 +174,9 @@ export function TaskDetailModal({ task, isOpen, onClose, onUpdate }: TaskDetailM
               </div>
             </DialogHeader>
 
-            <div className="p-6 space-y-6">
+            <div className="p-8 space-y-8">
               <div>
-                <h3 className="text-sm font-medium text-gray-900 mb-2">Description</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Description</h3>
                 {isEditing ? (
                   <Textarea
                     value={editedDescription}
@@ -222,7 +203,7 @@ export function TaskDetailModal({ task, isOpen, onClose, onUpdate }: TaskDetailM
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-900 mb-4">Activity</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-6">Activity</h3>
                 <div className="space-y-4">
                   {mockActivity.map((activity) => (
                     <div key={activity.id} className="flex gap-3">
@@ -245,76 +226,13 @@ export function TaskDetailModal({ task, isOpen, onClose, onUpdate }: TaskDetailM
                 </div>
               </div>
 
-              {/* Comments */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-900 mb-4">
-                  Comments ({mockComments.length})
-                </h3>
-                
-                {/* Add Comment */}
-                <div className="flex gap-3 mb-4">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="text-sm bg-blue-100 text-blue-600">
-                      JD
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <Textarea
-                      placeholder="Add a comment..."
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      className="min-h-[80px] resize-none"
-                    />
-                    <div className="flex justify-between items-center mt-2">
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm">
-                          <Paperclip className="w-4 h-4" />
-                        </Button>
-                      </div>
-                      <Button size="sm" disabled={!newComment.trim()}>
-                        Comment
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Comment List */}
-                <div className="space-y-4">
-                  {mockComments.map((comment) => (
-                    <div key={comment.id} className="flex gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="text-sm bg-gray-100">
-                          {comment.author.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-sm font-medium text-gray-900">
-                              {comment.author}
-                            </span>
-                            <span className="text-xs text-gray-500">
-                              {formatRelativeTime(comment.createdAt)}
-                            </span>
-                          </div>
-                          <div className="text-sm text-gray-700 leading-relaxed">
-                            {comment.content}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="w-80 bg-gray-50 border-l border-gray-200 overflow-y-auto">
-            <div className="p-6 space-y-6">
-              {/* Status */}
+          <div className="w-96 bg-gray-50 border-l border-gray-200 overflow-y-auto">
+            <div className="p-8 space-y-8">
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-2 block">Status</label>
+                <label className="text-base font-semibold text-gray-700 mb-3 block">Status</label>
                 <Select value={task.status} onValueChange={handleStatusChange}>
                   <SelectTrigger>
                     <SelectValue />
@@ -328,9 +246,8 @@ export function TaskDetailModal({ task, isOpen, onClose, onUpdate }: TaskDetailM
                 </Select>
               </div>
 
-              {/* Priority */}
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-2 block">Priority</label>
+                <label className="text-base font-semibold text-gray-700 mb-3 block">Priority</label>
                 <Select value={task.priority} onValueChange={handlePriorityChange}>
                   <SelectTrigger>
                     <SelectValue />
@@ -344,9 +261,8 @@ export function TaskDetailModal({ task, isOpen, onClose, onUpdate }: TaskDetailM
                 </Select>
               </div>
 
-              {/* Assignee */}
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-2 block">Assignee</label>
+                <label className="text-base font-semibold text-gray-700 mb-3 block">Assignee</label>
                 <div className="flex items-center gap-2 p-2 border border-gray-200 rounded-md bg-white">
                   {pipe(
                     task.assigneeId,
@@ -372,9 +288,8 @@ export function TaskDetailModal({ task, isOpen, onClose, onUpdate }: TaskDetailM
                 </div>
               </div>
 
-              {/* Due Date */}
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-2 block">Due Date</label>
+                <label className="text-base font-semibold text-gray-700 mb-3 block">Due Date</label>
                 <div className="flex items-center gap-2 p-2 border border-gray-200 rounded-md bg-white">
                   <Calendar className="w-4 h-4 text-gray-400" />
                   {pipe(
@@ -399,14 +314,13 @@ export function TaskDetailModal({ task, isOpen, onClose, onUpdate }: TaskDetailM
                 </div>
               </div>
 
-              {/* Created/Updated */}
-              <div className="text-xs text-gray-500 space-y-1 pt-4 border-t border-gray-200">
+              <div className="text-sm text-gray-500 space-y-2 pt-6 border-t border-gray-200">
                 <div className="flex items-center gap-2">
-                  <Clock className="w-3 h-3" />
+                  <Clock className="w-4 h-4" />
                   <span>Created {task.createdAt.toLocaleDateString()}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-3 h-3" />
+                  <Clock className="w-4 h-4" />
                   <span>Updated {task.updatedAt.toLocaleDateString()}</span>
                 </div>
               </div>

@@ -11,13 +11,13 @@ export function DashboardLayout({ sidebar, header, main, stats }: any) {
       </header>
       
       <ResizablePanelGroup direction="horizontal" className="h-[calc(100vh-4rem)]">
-        <ResizablePanel defaultSize={25} minSize={8} maxSize={40} className="min-w-[180px]">
-          <aside className="h-[calc(100vh-4rem)] bg-white/95 backdrop-blur-sm border-r border-gray-200 overflow-y-auto scrollbar-thin">
+        <ResizablePanel defaultSize={14} minSize={12} maxSize={40} className="min-w-[140px]">
+          <aside className="h-full bg-white/95 backdrop-blur-sm border-r border-gray-200">
             {sidebar}
           </aside>
         </ResizablePanel>
         
-        <ResizableHandle withHandle className="w-2 bg-gray-100 hover:bg-gray-200 transition-colors group">
+        <ResizableHandle withHandle className="w-1 bg-gray-100 hover:bg-gray-200 transition-colors group">
           <div className="w-4 h-12 bg-white border border-gray-300 rounded-md shadow-modern group-hover:border-gray-400 group-hover:shadow-modern-lg transition-all flex items-center justify-center">
             <div className="flex flex-col space-y-1">
               <div className="w-1 h-1 bg-gray-400 rounded-full"></div>

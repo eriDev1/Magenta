@@ -5,7 +5,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { TaskCard } from "@/components/task-card";
 import { TaskFilters } from "@/components/tasks/task-filters";
-import { Task, TaskFilter, TaskSummary, TaskStatus, TaskPriority } from "@/lib/types";
+import { Task, TaskFilter, TaskStatus, TaskSummary, TaskPriority } from "@/lib/types";
 
 interface DashboardProps {
   user: {
@@ -33,8 +33,8 @@ export function Dashboard({ user, sampleTasks }: DashboardProps) {
         ...summary.byPriority,
         [task.priority]: (summary.byPriority[task.priority] || 0) + 1
       },
-      overdue: task.dueDate && task.dueDate < new Date() && task.status !== 'completed' 
-        ? summary.overdue + 1 
+      overdue: task.dueDate && task.dueDate instanceof Date && task.dueDate < new Date() && task.status !== 'completed'
+        ? summary.overdue + 1
         : summary.overdue
     }), initialSummary);
   };

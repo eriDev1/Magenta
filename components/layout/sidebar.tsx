@@ -75,9 +75,9 @@ export function Sidebar({ currentProject = "My Project" }: SidebarProps) {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] bg-white flex flex-col border-r border-gray-200">
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-5 border-b border-gray-100">
+    <div className="h-full bg-white flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-shrink-0 p-5 border-b border-gray-100">
           <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
             Current Project
           </div>
@@ -110,43 +110,45 @@ export function Sidebar({ currentProject = "My Project" }: SidebarProps) {
           </Button>
         </div>
 
-        <nav className="p-4 space-y-2">
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
-            Planning
-          </div>
-          {navigationItems.slice(0, 4).map(renderNavigationItem)}
-          
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 mt-6 px-1">
-            Development
-          </div>
-          {navigationItems.slice(4).map(renderNavigationItem)}
-        </nav>
+        <div className="flex-1 overflow-y-auto">
+          <nav className="p-4 space-y-2">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
+              Planning
+            </div>
+            {navigationItems.slice(0, 4).map(renderNavigationItem)}
+            
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 mt-6 px-1">
+              Development
+            </div>
+            {navigationItems.slice(4).map(renderNavigationItem)}
+          </nav>
 
-        <div className="p-4 border-t border-gray-100">
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            Recent Projects
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center px-2 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors group cursor-pointer">
-              <div className="w-4 h-4 bg-blue-500 rounded mr-3"></div>
-              <span className="flex-1 truncate">E-commerce Platform</span>
-              <div className="text-xs text-gray-400">12 tasks</div>
+          <div className="p-4 border-t border-gray-100">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+              Recent Projects
             </div>
-            <div className="flex items-center px-2 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors group cursor-pointer">
-              <div className="w-4 h-4 bg-green-500 rounded mr-3"></div>
-              <span className="flex-1 truncate">Mobile App Redesign</span>
-              <div className="text-xs text-gray-400">8 tasks</div>
-            </div>
-            <div className="flex items-center px-2 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors group cursor-pointer">
-              <div className="w-4 h-4 bg-purple-500 rounded mr-3"></div>
-              <span className="flex-1 truncate">API Integration</span>
-              <div className="text-xs text-gray-400">15 tasks</div>
+            <div className="space-y-2">
+              <div className="flex items-center px-2 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors group cursor-pointer">
+                <div className="w-4 h-4 bg-blue-500 rounded mr-3"></div>
+                <span className="flex-1 truncate">E-commerce Platform</span>
+                <div className="text-xs text-gray-400">12 tasks</div>
+              </div>
+              <div className="flex items-center px-2 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors group cursor-pointer">
+                <div className="w-4 h-4 bg-green-500 rounded mr-3"></div>
+                <span className="flex-1 truncate">Mobile App Redesign</span>
+                <div className="text-xs text-gray-400">8 tasks</div>
+              </div>
+              <div className="flex items-center px-2 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors group cursor-pointer">
+                <div className="w-4 h-4 bg-purple-500 rounded mr-3"></div>
+                <span className="flex-1 truncate">API Integration</span>
+                <div className="text-xs text-gray-400">15 tasks</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4">
+      <div className="flex-shrink-0 bg-white border-t border-gray-100 p-4">
         <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
           Quick Access
         </div>
