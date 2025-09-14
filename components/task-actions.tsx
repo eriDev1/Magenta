@@ -88,7 +88,7 @@ export function TaskActions({ task }: TaskActionsProps) {
   const statusActions = getStatusActions()
 
   return (
-    <>
+    <div onClick={(e) => e.stopPropagation()}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm">
@@ -143,6 +143,6 @@ export function TaskActions({ task }: TaskActionsProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   )
 }

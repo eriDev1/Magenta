@@ -5,7 +5,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { TaskCard } from "@/components/task-card";
 import { TaskFilters } from "@/components/tasks/task-filters";
-import { Task, TaskFilter, TaskStatus, TaskSummary, TaskPriority } from "@/lib/types";
+import { Task, TaskFilter, TaskStatus, TaskSummary, TaskPriority, O } from "@/lib/types";
 
 interface DashboardProps {
   user: {
@@ -40,7 +40,13 @@ export function Dashboard({ user, sampleTasks }: DashboardProps) {
   };
 
   const taskSummary = calculateTaskSummary(sampleTasks);
-  const currentFilter: TaskFilter = {};
+  const currentFilter: TaskFilter = {
+    status: O.none,
+    priority: O.none,
+    assigneeId: O.none,
+    search: O.none,
+    overdue: false
+  };
 
   return (
     <DashboardLayout
