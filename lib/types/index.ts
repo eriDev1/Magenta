@@ -276,3 +276,10 @@ export const applyTaskFilter = (tasks: readonly Task[], filter: TaskFilter): rea
       )
     )
   )
+
+export interface StatCardProps {
+  title: string;
+  value: number | string;
+  subtitle?: string;
+  color?: 'blue' | 'green' | 'yellow' | 'red' | 'gray';
+}
