@@ -1,13 +1,15 @@
-import { Task } from '@/lib/types';
+import { Task, O, pipe } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
-import { Calendar, Clock, User, Tag } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Calendar, User } from 'lucide-react';
 import { getPriorityColor, getStatusColor } from '@/lib/common/constants';
 
 export function TaskCard({ task }: { task: Task }) {
-  const isOverdue = task.dueDate && task.dueDate < new Date() && task.status !== 'completed';
+  const isOverdue = pipe(
+    task.dueDate,
+    O.map(date => date < new Date() && task.status !== 'completed'),
+    O.getOrElse(() => false)
+  );
 
   return (
     <Card className="hover:shadow-lg transition-all duration-200 border border-gray-200 group">
@@ -39,13 +41,19 @@ export function TaskCard({ task }: { task: Task }) {
         <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
           <div className="flex items-center gap-1">
             <User className="w-3 h-3" />
-            <span>Assignee</span>
+            <span>{pipe(task.assigneeId, O.fold(() => 'Unassigned', () => 'Assigned'))}</span>
           </div>
-          {task.dueDate && (
-            <div className={`flex items-center gap-1 ${isOverdue ? 'text-red-500' : 'text-gray-500'}`}>
-              <Calendar className="w-3 h-3" />
-              <span>Due {task.dueDate.toLocaleDateString()}</span>
-            </div>
+          {pipe(
+            task.dueDate,
+            O.fold(
+              () => null,
+              date => (
+                <div className={`flex items-center gap-1 ${isOverdue ? 'text-red-500' : 'text-gray-500'}`}>
+                  <Calendar className="w-3 h-3" />
+                  <span>Due {date.toLocaleDateString()}</span>
+                </div>
+              )
+            )
           )}
         </div>
       </CardContent>
